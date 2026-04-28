@@ -7,7 +7,6 @@ import { ArrowLeft, Loader2, Save } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { ImageUploader } from "@/components/admin/ImageUploader";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -47,14 +46,17 @@ const ProductForm = () => {
   });
 
   const onSubmit = async (data: ProductFormValues) => {
+    console.log("Dados do form:", data);
     setIsSaving(true);
     try {
-      const payload = {
-        ...data,
-        image_url: imageUrl,
-      };
-
-      const { error } = await supabase.from("products").insert([payload]);
+      const { error } = await supabase.from("produtos").insert({
+        nome: data.name,
+        team: data.team,
+        preco: data.price,
+        category: data.category,
+        description: data.description,
+        image: imageUrl,
+      });
 
       if (error) throw error;
 
@@ -90,7 +92,7 @@ const ProductForm = () => {
                 <h2 className="text-lg font-semibold text-gray-900 border-b border-gray-100 pb-4">
                   Informações Básicas
                 </h2>
-                
+
                 <FormField
                   control={form.control}
                   name="name"
@@ -153,7 +155,7 @@ const ProductForm = () => {
                 <h2 className="text-lg font-semibold text-gray-900 border-b border-gray-100 pb-4">
                   Detalhes Técnicos
                 </h2>
-                
+
                 <FormField
                   control={form.control}
                   name="description"
@@ -161,10 +163,10 @@ const ProductForm = () => {
                     <FormItem>
                       <FormLabel>Descrição</FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Detalhes sobre o tecido, patch, jogador..." 
+                        <Textarea
+                          placeholder="Detalhes sobre o tecido, patch, jogador..."
                           className="min-h-[120px] resize-y"
-                          {...field} 
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -179,8 +181,8 @@ const ProductForm = () => {
                 <h2 className="text-lg font-semibold text-gray-900 border-b border-gray-100 pb-4">
                   Imagem Mockup (Upload)
                 </h2>
-                
-                <ImageUploader 
+
+                <ImageUploader
                   currentImageUrl={imageUrl}
                   onUploadSuccess={setImageUrl}
                   onRemoveImage={() => setImageUrl("")}
