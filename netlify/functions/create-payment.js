@@ -1,5 +1,5 @@
 exports.handler = async (event, context) => {
-    // Só aceita POST
+    // Apenas POST
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -8,23 +8,41 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        const { amount, customer } = JSON.parse(event.body);
+        const body = JSON.parse(event.body);
+        
+        // Chaves da SigiloPay fornecidas
+        const SIGILO_SECRET_KEY = '0akz7eyk20cmo98ijbv7jpil51kwvyb5g4hru1clsoey7qte7f9xklhjq915qvj9';
+        const SIGILO_PUBLIC_KEY = 'samuelcab444_fd963j9ub7kpwenl';
+        const SIGILO_API = 'https://app.sigilopay.com.br/api/v1/gateway/pix/receive';
 
         // Chama a API da SigiloPay
-        const response = await fetch('https://api.sigilopay.com/v1/payments', {
+        const response = await fetch(SIGILO_API, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.SIGILOPAY_SECRET_KEY}` // Chave secreta
+                'Accept': 'application/json',
+                'x-secret-key': SIGILO_SECRET_KEY,
+                'x-public-key': SIGILO_PUBLIC_KEY
             },
             body: JSON.stringify({
-                amount,
-                customer,
-                // outros dados necessários
+                identifier: body.identifier || 'camisa10_' + Date.now(),
+                amount: body.amount,
+                client: body.client
             })
         });
 
         const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                statusCode: response.status,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ error: data.message || 'Erro ao gerar PIX' })
+            };
+        }
 
         return {
             statusCode: 200,
@@ -38,6 +56,10 @@ exports.handler = async (event, context) => {
     } catch (error) {
         return {
             statusCode: 500,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({ error: error.message })
         };
     }

@@ -4,11 +4,9 @@ import { supabase } from '../lib/supabase';
 import { User, Mail, CreditCard, MapPin, Phone, Calendar, Hash, Lock, ShieldCheck, QrCode, Copy, CheckCheck } from 'lucide-react';
 
 // =====================================================
-// SIGILOPAY — chaves (troque se rodar em produção)
+// SIGILOPAY — A API agora é chamada via Backend
 // =====================================================
-const SIGILO_SECRET_KEY = '0akz7eyk20cmo98ijbv7jpil51kwvyb5g4hru1clsoey7qte7f9xklhjq915qvj9';
-const SIGILO_PUBLIC_KEY = '';   // preencha se a sua conta exigir public key
-const SIGILO_API       = 'https://app.sigilopay.com.br/api/v1/gateway/pix/receive';
+const API_URL = '/api/create-payment';
 
 // =====================================================
 
@@ -49,7 +47,7 @@ export default function Checkout() {
     }
   }, [searchParams]);
 
-  // Gera QR Code Sigilopay ao entrar na aba PIX
+  // Gera QR Code ao entrar na aba PIX
   useEffect(() => {
     if (metodo !== 'pix' || pixData || pixLoading) return;
     gerarPix();
@@ -74,23 +72,19 @@ export default function Checkout() {
         },
       };
 
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'Accept':       'application/json',
-        'x-secret-key': SIGILO_SECRET_KEY,
-      };
-      if (SIGILO_PUBLIC_KEY) headers['x-public-key'] = SIGILO_PUBLIC_KEY;
-
-      const res  = await fetch(SIGILO_API, {
+      const res  = await fetch(API_URL, {
         method:  'POST',
-        headers,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept':       'application/json'
+        },
         body:    JSON.stringify(payload),
       });
 
       const json = await res.json();
 
       if (!res.ok) {
-        throw new Error(json?.message || json?.errorDescription || `Erro ${res.status}`);
+        throw new Error(json?.error || json?.message || json?.errorDescription || `Erro ${res.status}`);
       }
 
       // Pega o nó pix da resposta (suporta estruturas diferentes)
