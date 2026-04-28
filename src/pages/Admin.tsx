@@ -89,10 +89,10 @@ export default function Admin() {
     const gerarLinkCheckout = (prod: any) => {
         const qty = prompt("Quantas unidades para este link? (Ex: 1, 2, 3...)", "1") || "1";
         const isCustom = confirm("Deseja personalizar o preço ou nome para este link específico?");
-        
+
         const baseUrl = window.location.origin;
         let url = `${baseUrl}/checkout?id=${prod.id}&qty=${qty}`;
-        
+
         if (isCustom) {
             const novoNome = prompt("Nome personalizado:", prod.nome) || prod.nome;
             const novoPreco = prompt("Preço unitário personalizado (Ex: 129.90):", prod.preco) || prod.preco;
@@ -223,8 +223,8 @@ export default function Admin() {
                                                 <a href={`/checkout?id=${prod.id}`} target="_blank" style={{ fontSize: '11px', color: '#2563eb', textDecoration: 'none', fontWeight: 900 }}>
                                                     🔗 Ver Checkout
                                                 </a>
-                                                <button 
-                                                    onClick={() => gerarLinkCheckout(prod)} 
+                                                <button
+                                                    onClick={() => gerarLinkCheckout(prod)}
                                                     style={{ background: '#f0fdf4', border: '1px solid #1da154', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', color: '#1da154', fontWeight: 900, cursor: 'pointer' }}
                                                 >
                                                     ⚡ GERAR LINK DINÂMICO
