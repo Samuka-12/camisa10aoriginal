@@ -247,7 +247,6 @@ export default function Checkout() {
               <ShieldCheck size={14} /> Dados criptografados (SSL)
             </div>
           </div>
-          <img src="https://logodownload.org/wp-content/uploads/2014/10/visa-logo-1.png" style={{ height: '14px' }} />
         </div>
 
         <div style={{ padding: '20px' }}>
@@ -258,6 +257,7 @@ export default function Checkout() {
                 src={produto.imagens[0]} 
                 style={imgStyle} 
                 alt="produto" 
+                onError={(e) => (e.currentTarget.style.display = 'none')}
               />
             ) : null}
             <div style={{ flex: 1, marginLeft: (produto.imagens.length === 1 && produto.imagens[0] && !produto.imagens[0].includes('placeholder')) ? '10px' : '0' }}>
