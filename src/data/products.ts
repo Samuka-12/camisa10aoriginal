@@ -33,7 +33,7 @@ export const allProducts: Product[] = [
     sizes: ["P", "M", "G", "GG", "XGG"],
     description:
       "Vista o manto da maior seleção do mundo. A camisa amarela é mais que um uniforme — é um símbolo de paixão, garra e cinco estrelas de glória. Tecido premium com tecnologia de absorção de suor, perfeita para torcer ou usar no dia a dia com estilo. Edição 2026/27 com design moderno e detalhes em verde. Garantia de 7 dias. Parcele em até 12x sem juros.",
-    externalCheckoutUrl: "https://arrogant-pay-flow-fast.base44.app",
+    externalCheckoutUrl: "http://localhost:8080/checkout?id=60b4d28c-9137-4b46-9244-5cced17f9aac",
   },
   {
     id: "sel-02",
@@ -977,6 +977,7 @@ export const heroBanner = `${BASE_URL}/hero-banner.jpg`;
 export const getProductsByCategory = (category: string): Product[] => {
   return allProducts.filter((p) => p.category.includes(category.toLowerCase()));
 };
+
 
 export const getProductById = (id: string): Product | undefined => {
   return allProducts.find((p) => p.id === id);
