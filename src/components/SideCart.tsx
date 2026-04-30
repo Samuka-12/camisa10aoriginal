@@ -9,7 +9,7 @@ const SideCart = () => {
     console.log("Iniciando checkout com itens:", items);
     const origin = window.location.origin;
 
-    if (items.length === 1) {
+    if (totalItems === 1) {
       const item = items[0];
       if (item.product.externalCheckoutUrl) {
         const target = item.product.externalCheckoutUrl.startsWith('http') 
