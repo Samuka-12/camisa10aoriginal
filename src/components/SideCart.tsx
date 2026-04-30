@@ -29,7 +29,7 @@ const SideCart = () => {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
-      <SheetContent className="w-full sm:max-w-md flex flex-col">
+      <SheetContent className="w-full sm:max-w-md flex flex-col notranslate">
         <SheetHeader>
           <SheetTitle className="text-lg font-bold">
             Carrinho ({totalItems} {totalItems === 1 ? "item" : "itens"})
