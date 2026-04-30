@@ -27,6 +27,7 @@ export default function Checkout() {
   const [copiado, setCopiado] = useState(false);
 
   const { items: cartItems, totalPrice: cartTotal, totalItems } = useCart();
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutos em segundos
   const [produto, setProduto] = useState({
     nome: 'Buscando camisa...',
     preco: 0,
@@ -164,6 +165,26 @@ export default function Checkout() {
       setCopiado(true);
       setTimeout(() => setCopiado(false), 3000);
     });
+  };
+
+  // Lógica do cronômetro PIX
+  useEffect(() => {
+    let timer: any;
+    if (pixData && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft(prev => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setPixData(null);
+      setTimeLeft(300);
+    }
+    return () => clearInterval(timer);
+  }, [pixData, timeLeft]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   // CEP automático
@@ -337,8 +358,8 @@ export default function Checkout() {
             {/* ====== PIX — QR REAL SIGILOPAY ====== */}
             {metodo === 'pix' && (
               <div style={pixSection}>
-                <div style={{ color: '#1da154', fontWeight: '900', marginBottom: '15px', fontSize: '15px' }}>
-                  PAGUE COM PIX E RECEBA EM DOBRO
+                <div style={{ color: '#1da154', fontWeight: '900', marginBottom: '15px', fontSize: '15px', textAlign: 'center' }}>
+                  PIX COM RECEBIMENTO IMEDIATO
                 </div>
 
                 {/* Carregando */}
@@ -363,6 +384,19 @@ export default function Checkout() {
                 {/* QR Code real */}
                 {pixData && !pixLoading && (
                   <>
+                    <div style={{ 
+                      textAlign: 'center', 
+                      marginBottom: '10px', 
+                      color: timeLeft < 60 ? '#ef4444' : '#666', 
+                      fontWeight: 'bold',
+                      fontSize: '14px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '5px'
+                    }}>
+                      <Clock size={16} /> O código expira em: {formatTime(timeLeft)}
+                    </div>
                     {/* Imagem do QR */}
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
                       <div style={{ padding: '8px', background: '#fff', borderRadius: '12px', border: '2px dashed #1da154', display: 'inline-block' }}>
