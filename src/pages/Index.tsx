@@ -1,11 +1,20 @@
+import { useRef, useEffect } from "react";
 import Header from "@/components/Header";
 import CategoryBar from "@/components/CategoryBar";
 import ProductSection from "@/components/ProductSection";
 import Footer from "@/components/Footer";
 import { selecoes, retro, europeus, brasileirao } from "@/data/products";
-import heroBanner from "@/assets/hero-banner.jpg";
+import videoBanner from "@/assets/watermark-removed.mp4";
 
 const Index = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 2.0; // Deixa o vídeo 2x mais rápido
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -13,12 +22,14 @@ const Index = () => {
 
       {/* Hero banner */}
       <section className="relative overflow-hidden">
-        <img
-          src={heroBanner}
-          alt="Jogadores de seleções na Copa do Mundo"
+        <video
+          ref={videoRef}
+          src={videoBanner}
+          autoPlay
+          loop
+          muted
+          playsInline
           className="w-full h-[320px] md:h-[420px] object-cover"
-          width={1920}
-          height={640}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-10 md:pb-14 text-center px-4">
